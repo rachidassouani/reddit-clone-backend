@@ -21,5 +21,5 @@ public class Vote {
     @ManyToOne
     private Post post;
     @ManyToOne
-    private User user;
+    private AppUser user;
 }

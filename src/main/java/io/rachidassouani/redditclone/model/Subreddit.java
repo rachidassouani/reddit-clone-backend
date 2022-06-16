@@ -24,5 +24,5 @@ public class Subreddit {
     private List<Post> posts;
     private Instant createdAt;
     @ManyToOne
-    private User user;
+    private AppUser user;
 }

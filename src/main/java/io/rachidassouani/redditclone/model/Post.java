@@ -24,7 +24,7 @@ public class Post {
     private String description;
     private int voteCount;
     @ManyToOne
-    private User user;
+    private AppUser user;
     @ManyToOne
     private Subreddit subreddit;
 }
