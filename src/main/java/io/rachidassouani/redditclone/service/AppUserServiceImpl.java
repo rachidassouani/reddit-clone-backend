@@ -41,12 +41,17 @@ public class AppUserServiceImpl implements AppUserService {
         final String token = UUID.randomUUID().toString();
         VerificationToken verificationToken = new VerificationToken();
         verificationToken.setToken(token);
-        verificationToken.setUser(appUser);
+        verificationToken.setAppUser(appUser);
         verificationToken.setCreatedAt(Instant.now());
         // token will expire in 15 min
         verificationToken.setExpiredAt(Instant.now().plusSeconds(900));
         verificationTokenService.save(verificationToken);
 
         return token;
+    }
+
+    @Override
+    public int enableAppUser(String email) {
+        return appUserRepository.enableAppUser(email);
     }
 }

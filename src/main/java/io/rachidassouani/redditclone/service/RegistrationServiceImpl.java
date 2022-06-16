@@ -1,8 +1,12 @@
 package io.rachidassouani.redditclone.service;
 
 import io.rachidassouani.redditclone.dto.RegistrationRequest;
+import io.rachidassouani.redditclone.exception.EmailAlreadyConfirmedException;
+import io.rachidassouani.redditclone.exception.TokenExpiredException;
+import io.rachidassouani.redditclone.exception.TokenNotFoundException;
 import io.rachidassouani.redditclone.exception.UserExistsException;
 import io.rachidassouani.redditclone.model.AppUser;
+import io.rachidassouani.redditclone.model.VerificationToken;
 import io.rachidassouani.redditclone.util.Constant;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,6 +21,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private final AppUserService appUserService;
     private final MailService mailService;
+    private final VerificationTokenService verificationTokenService;
 
     @Override
     public String register(RegistrationRequest registerRequest) throws UserExistsException {
@@ -36,6 +41,28 @@ public class RegistrationServiceImpl implements RegistrationService {
         mailService.sendMail(user.getEmail(), buildEmail(user.getUsername(), link));
 
         return token;
+    }
+
+    @Override
+    public String confirmToken(String token) throws TokenNotFoundException, TokenExpiredException, EmailAlreadyConfirmedException {
+
+        VerificationToken verificationToken = verificationTokenService.getToken(token)
+                .orElseThrow(()-> new TokenNotFoundException("Token not found"));
+
+        if (verificationToken.getConfirmedAt() != null) {
+            throw new EmailAlreadyConfirmedException("email already confirmed");
+        }
+
+        if (verificationToken.getExpiredAt().isBefore(Instant.now())) {
+            throw new TokenExpiredException("token expired");
+        }
+
+        verificationTokenService.setConfirmedAt(token);
+
+        // enabling the user
+        appUserService.enableAppUser(verificationToken.getAppUser().getEmail());
+
+        return "Confirmed";
     }
 
     private String buildEmail(String name, String link) {

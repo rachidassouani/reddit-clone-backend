@@ -18,7 +18,7 @@ public class VerificationToken {
     private String token;
 
     @ManyToOne
-    private AppUser user;
+    private AppUser appUser;
 
     @Column(nullable = false)
     private Instant createdAt;
@@ -28,9 +28,9 @@ public class VerificationToken {
 
     private Instant confirmedAt;
 
-    public VerificationToken(String token, AppUser user, Instant createdAt, Instant expiredAt, Instant confirmedAt) {
+    public VerificationToken(String token, AppUser appUser, Instant createdAt, Instant expiredAt, Instant confirmedAt) {
         this.token = token;
-        this.user = user;
+        this.appUser = appUser;
         this.createdAt = createdAt;
         this.expiredAt = expiredAt;
         this.confirmedAt = confirmedAt;

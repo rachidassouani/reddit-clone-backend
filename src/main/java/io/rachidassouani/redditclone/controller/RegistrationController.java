@@ -1,6 +1,9 @@
 package io.rachidassouani.redditclone.controller;
 
 import io.rachidassouani.redditclone.dto.RegistrationRequest;
+import io.rachidassouani.redditclone.exception.EmailAlreadyConfirmedException;
+import io.rachidassouani.redditclone.exception.TokenExpiredException;
+import io.rachidassouani.redditclone.exception.TokenNotFoundException;
 import io.rachidassouani.redditclone.exception.UserExistsException;
 import io.rachidassouani.redditclone.service.RegistrationService;
 import lombok.AllArgsConstructor;
@@ -16,5 +19,10 @@ public class RegistrationController {
     @PostMapping
     public void register(@RequestBody RegistrationRequest registrationRequest) throws UserExistsException {
         registrationService.register(registrationRequest);
+    }
+
+    @GetMapping(path = "confirm")
+    public String confirm(@RequestParam("token") String token) throws TokenExpiredException, EmailAlreadyConfirmedException, TokenNotFoundException {
+        return registrationService.confirmToken(token);
     }
 }

@@ -5,4 +5,6 @@ import io.rachidassouani.redditclone.model.AppUser;
 
 public interface AppUserService {
     String save(AppUser appUser) throws UserExistsException;
+
+    int enableAppUser(String email);
 }
