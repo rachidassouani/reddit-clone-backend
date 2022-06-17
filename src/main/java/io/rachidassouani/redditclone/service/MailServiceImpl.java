@@ -35,6 +35,5 @@ public class MailServiceImpl implements MailService {
             LOGGER.error("failed to send email", e);
             throw new IllegalStateException("failed to send email");
         }
-
     }
 }
